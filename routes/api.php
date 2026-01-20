@@ -17,9 +17,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/tasks', [TaskController::class, 'index']);
     Route::post('/tasks', [TaskController::class, 'store']);
+    Route::get('/tasks/{task}', [TaskController::class, 'show']); // Add show method
     Route::put('/tasks/{task}', [TaskController::class, 'update']);
     Route::patch('/tasks/{task}', [TaskController::class, 'update']);
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+    
+    Route::get('/tasks/{task}/comments', [\App\Http\Controllers\CommentController::class, 'index']);
+    Route::post('/tasks/{task}/comments', [\App\Http\Controllers\CommentController::class, 'store']);
     
     Route::get('/stats', [TaskController::class, 'stats']);
 

@@ -12,6 +12,13 @@ class TaskController extends Controller
         return Auth::user()->tasks;
     }
 
+    public function show(Task $task) {
+        if ($task->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        return $task->load('user:id,name');
+    }
+
     public function store(Request $request) {
         $data = $request->validate([
             'title' => 'required|string|max:255',
