@@ -22,4 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
     
     Route::get('/stats', [TaskController::class, 'stats']);
+
+    Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
+    Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
+    Route::put('/users/{user}', [\App\Http\Controllers\UserController::class, 'update']);
+    Route::delete('/users/{user}', [\App\Http\Controllers\UserController::class, 'destroy']);
 });
