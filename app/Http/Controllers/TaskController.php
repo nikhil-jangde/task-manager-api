@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
     public function index() {
-        return Auth::user()->tasks;
+        $user = Task::all();
+        return $user;
     }
 
     public function show(Task $task) {
-        if ($task->user_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
         return $task->load('user:id,name');
     }
 
@@ -23,15 +21,17 @@ class TaskController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'in:backlog,in_progress,completed'
+            'status' => 'in:backlog,in_progress,completed',
+            'user_id' => 'required|exists:users,id'
         ]);
 
-        $task = Auth::user()->tasks()->create($data);
+        $task = Task::create($data);
         return response()->json($task, 201);
     }
 
     public function update(Request $request, Task $task) {
-        if ($task->user_id !== Auth::id()) {
+
+        if (!Auth::check()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -46,9 +46,6 @@ class TaskController extends Controller
     }
 
     public function destroy(Task $task) {
-         if ($task->user_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
         $task->delete();
         return response()->json(['message' => 'Deleted']);
     }
