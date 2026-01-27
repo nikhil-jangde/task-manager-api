@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -35,4 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
     Route::put('/users/{user}', [\App\Http\Controllers\UserController::class, 'update']);
     Route::delete('/users/{user}', [\App\Http\Controllers\UserController::class, 'destroy']);
+});
+
+Route::get('/get-comments', function () {
+   $comments = Comment::where('user_id', 1)->with(['task:id,title', 'user:id,name'])->get();
+   return response()->json($comments);
 });
